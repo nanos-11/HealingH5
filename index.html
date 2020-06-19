@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>愈见心理</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.js"></script>
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+	<script type="text/javascript" src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
+	
+	<link rel="stylesheet" type="text/css" href="./css/gb750.css">
+	<link href="./css/style.daaf839052431001.css" rel="stylesheet">
+	<link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+<div id="app">
+	<div>
+		<section class="page1">
+			<div class="banner"><img src="images/bac111.jpg" alt="" width="100%"></div>
+		</section>
+		<section class="baominfon">
+			8人正在拼团，可直接参团
+		</section>
+		<section class="tuan">
+			<div class="leftbox">
+				<div class="imgs"><img src="images/iconimg.png" alt=""></div>
+				<div style="font-size:.3rem;line-height: 1rem">韩亦如</div>
+			</div>
+			<div class="rightbox">
+				<div class="timesbox ">
+					<h3 class="h1s">还剩 <span style="color: crimson">1</span> 人成团</h3>
+					<h3 class="h1s" id="timer">
+					</h3>
+				</div>
+				
+				<div class="btn">
+					<div class="btns" @click="intentRegister(1)">去参团</div>
+				</div>
+			</div>
+		</section>
+		<section class="baominfon" style="border-top: none">
+			报名流程
+		</section>
+		<section class="page1">
+			<div class="banner"><img src="images/bac1.png" alt="" width="100%"></div>
+		</section>
+		<section class="page1">
+			<div class="banner"><img src="images/bac22.png" alt="" width="100%"></div>
+		</section>
+		<section class="page1">
+			<div class="banner"><img src="images/bac33.png" alt="" width="100%"></div>
+		</section>
+		<section class="page1">
+			<div class="banner"><img src="images/bac44.jpg" alt="" width="100%"></div>
+		</section>
+		<section class="page1">
+			<div class="banner"><img src="images/bac55.png" alt="" width="100%"></div>
+		</section>
+		<section class="page1">
+			<div class="banner"><img src="images/bac66.png" alt="" width="100%"></div>
+			<div><br></div>
+		</section>
+		<section class="buybox">
+			<div class="footerbox">
+				<div class="checkcode">
+					<div class="fon1">已购买点击查看二维码</div>
+				</div>
+			</div>
+			
+			<div class="footerbox">
+				<div class="buyleft">
+					<div class="fon1">¥299</div>
+					<div class="fon2">单价购买</div>
+				</div>
+				<div class="buyright">
+					<div class="fon1">¥9</div>
+					<div class="fon2">一键参团</div>
+				</div>
+			</div>
+		</section>
+		
+		<section class="openBox">
+			<div class="codeBox">
+				<div class="closeButton">
+					X
+				</div>
+				<!--<div class="top">
+				  添加微信号或长按保存下方二维码添加您的学习专属班
+				</div>-->
+				<div style="width: 100%;height: auto;margin: 0 auto">
+					<img style="width: 80%; height: 80%;margin-left: 0.6rem" src="images/touchStu.png" alt="">
+				</div>
+				<!--<div class="bottom">
+				  微信号：13141204632
+				</div>-->
+			</div>
+		</section>
+	</div>
+</div>
+</body>
+
+<script type="text/javascript">
+    
+    
+    window.onload = function () {
+        let time = 1800;//30分钟换算成1800秒
+        setInterval(function () {
+            time = time - 1;
+            const minute = parseInt(time / 60);
+            const second = parseInt(time % 60);
+            $("#timer").html('还剩' + minute + '分' + second + '秒');
+        }, 1000);
+    }
+    
+    
+    function is_weixin() {
+        let ua = navigator.userAgent.toLowerCase();
+        let isWinxin = ua.indexOf('micromessenger') !== -1;
+        if (isWinxin) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    function intentRegister(type) {
+        if (this.is_weixin()) {
+            let u = navigator.userAgent, app = navigator.appVersion;
+            let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //g
+            let isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+            let appid = 'wx4a597f8c6a839610'
+            // console.log('nan intentRegister', isiOS)
+            if (isiOS) {
+                window.location.href = 'http://yujianzky.51nicelearn.com/onlinebuy/#/registerPhoneNineNew?type=' + type
+            } else {
+                let url = 'http://yujianzky.51nicelearn.com/onlinebuy/#/registerPhoneNineNew?type=' + type;
+                window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid='
+                    + appid + '&redirect_uri=' + encodeURIComponent(url) + '&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect';
+            }
+        } else {
+            window.location.href = 'http://yujianzky.51nicelearn.com/onlinebuy/#/registerPhoneNineNew?type=' + type
+        }
+    }
+</script>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
