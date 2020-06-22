@@ -14,137 +14,363 @@
 	<link rel="stylesheet" type="text/css" href="./css/gb750.css">
 	<link href="./css/style.daaf839052431001.css" rel="stylesheet">
 	<link rel="stylesheet" href="css/main.css">
+	<script src="js/cover.min.js"></script>
+	<script src="js/home.js"></script>
 </head>
 <body>
-<div id="app">
-	<div>
-		<section class="page1">
-			<div class="banner"><img src="images/bac111.jpg" alt="" width="100%"></div>
-		</section>
-		<section class="baominfon">
-			8人正在拼团，可直接参团
-		</section>
-		<section class="tuan">
-			<div class="leftbox">
-				<div class="imgs"><img src="images/iconimg.png" alt=""></div>
-				<div style="font-size:.3rem;line-height: 1rem">韩亦如</div>
+<div class="pay-page">
+	<div class="pay-scroll">
+		<div class="virtual">
+			<div class="rest">
+				<div class="rest-content">24人</div>
+				<div class="rest-txt">班级剩余名额</div>
 			</div>
-			<div class="rightbox">
-				<div class="timesbox ">
-					<h3 class="h1s">还剩 <span style="color: crimson">1</span> 人成团</h3>
-					<h3 class="h1s" id="timer">
-					</h3>
+			<div class="rest">
+				<div class="rest-content" id="pay_time">
+					10:00
 				</div>
-				
-				<div class="btn">
-					<div class="btns" @click="intentRegister(1)">去参团</div>
-				</div>
+				<div class="rest-txt">剩余支付时间</div>
 			</div>
-		</section>
-		<section class="baominfon" style="border-top: none">
-			报名流程
-		</section>
-		<section class="page1">
-			<div class="banner"><img src="images/bac1.png" alt="" width="100%"></div>
-		</section>
-		<section class="page1">
-			<div class="banner"><img src="images/bac22.png" alt="" width="100%"></div>
-		</section>
-		<section class="page1">
-			<div class="banner"><img src="images/bac33.png" alt="" width="100%"></div>
-		</section>
-		<section class="page1">
-			<div class="banner"><img src="images/bac44.jpg" alt="" width="100%"></div>
-		</section>
-		<section class="page1">
-			<div class="banner"><img src="images/bac55.png" alt="" width="100%"></div>
-		</section>
-		<section class="page1">
-			<div class="banner"><img src="images/bac66.png" alt="" width="100%"></div>
-			<div><br></div>
-		</section>
-		<section class="buybox">
-			<div class="footerbox">
-				<div class="checkcode">
-					<div class="fon1">已购买点击查看二维码</div>
+		</div>
+		<div class="gap"></div>
+		<div class="verify-tel">
+			<div class="verify-title">验证手机</div>
+			<div class="tel-space">
+				<div class="tel-icon">
+					<img src="images/tel-icon.png">
 				</div>
+				<input type="tel" style="font-size: 0.34rem;" placeholder="手机号"
+				       oninput="value=value.replace(/[^\d]/g,'')" maxlength="11"
+				       id="phone">
 			</div>
+			<div id="message_phone" style="font-size: 0.34rem; color: red;margin-left: 0.8rem;"></div>
 			
-			<div class="footerbox">
-				<div class="buyleft">
-					<div class="fon1">¥299</div>
-					<div class="fon2">单价购买</div>
-				</div>
-				<div class="buyright">
-					<div class="fon1">¥9</div>
-					<div class="fon2">一键参团</div>
-				</div>
+			<div class="code-space">
+				<div class="input-space">
+					<div class="code-icon"><img src="images/code-icon.png"></div>
+					<input type="number" style="font-size: 0.34rem;" placeholder="验证码"
+					       oninput="value=value.replace(/[^\d]/g,'')" maxlength="6"
+					       id="code" onblur="inputOnBlur()"></div>
+				<div id="getCode" class="tiktok">获取验证码</div> <!---->
+				<div id="code_time" class="tiktok" style="color:#ffffff; display: none">60</div>
 			</div>
-		</section>
-		
-		<section class="openBox">
-			<div class="codeBox">
-				<div class="closeButton">
-					X
-				</div>
-				<!--<div class="top">
-				  添加微信号或长按保存下方二维码添加您的学习专属班
-				</div>-->
-				<div style="width: 100%;height: auto;margin: 0 auto">
-					<img style="width: 80%; height: 80%;margin-left: 0.6rem" src="images/touchStu.png" alt="">
-				</div>
-				<!--<div class="bottom">
-				  微信号：13141204632
-				</div>-->
+			<div id="codeMessage" style="font-size: 0.34rem; color: red;margin-left: 0.8rem;"></div>
+		</div>
+		<div class="gap"></div>
+		<div class="course-info">
+			<div class="extra">
+				<img src="images/hint1.png" alt="" width="100%">
 			</div>
-		</section>
+			<div class="course-title">支付方式</div>
+			
+			<!--   todo     -->
+			<!--<label>
+				<input type="radio" name="language" value="alipay" checked>
+				微信支付
+			<label>
+				<input type="radio" name="language" value="wechat">
+				支付宝支付
+			</label>-->
+			
+			<radio-group v-model="radio">
+				<van-cell-group>
+					<!--<van-cell title="微信" clickable @click="radio === '1'">
+					  <van-radio slot="right-icon" name="1"/>
+					  <img class='wx' src="images/wxpay.png" alt="" style="width:0.5rem;height:0.5rem">
+					</van-cell>-->
+					<van-cell title="支付宝" clickable @click="radio === '2'">
+						<van-radio slot="right-icon" name="2"/>
+						<img class='al' src="images/alipay.jpg" alt="" style="width:0.5rem;height:0.5rem">
+					</van-cell>
+				</van-cell-group>
+			</radio-group>
+			<!--        -->
+			<div class="line"></div>
+		</div>
 	</div>
+	<div class="pay-btn">
+		<div class="pay-left">
+			<div class="money-space">
+				<div class="money-icon">￥</div>
+				<div class="money">{{price}}</div>
+			</div>
+		</div>
+		<button class="pay-right" onclick="loginPhonePay()">{{isPayMessage}}</button>
+	</div>
+	<section class="openBox" id="dialogPay">
+		<div class="codeBox">
+			<div class="closeButton" onclick="closeCode()">
+				X
+			</div>
+			<!--<div class="top">
+			  添加微信号或长按保存下方二维码添加您的学习专属班
+			</div>-->
+			<div style="width: 100%;height: auto;margin: 0 auto">
+				<img style="width: 80%; height: 80%;margin-left: 0.6rem" src="images/touchStu.png" alt="">
+			</div>
+			<!--<div class="bottom">
+			  微信号：13141204632
+			</div>-->
+		</div>
+	</section>
 </div>
 </body>
 
 <script type="text/javascript">
     
-    
     window.onload = function () {
-        let time = 1800;//30分钟换算成1800秒
-        setInterval(function () {
-            time = time - 1;
-            const minute = parseInt(time / 60);
-            const second = parseInt(time % 60);
-            $("#timer").html('还剩' + minute + '分' + second + '秒');
+        created();
+    }
+    // 支付剩余时间
+    let time = 600;
+    
+    function add() {
+        let interval = setInterval(function () {
+            if (time > 0) {
+                time = time - 1;
+                const minute = parseInt(time / 60);
+                const second = parseInt(time % 60);
+                $("#pay_time").html(minute + ':' + second);
+            } else {
+                clearInterval(interval)
+            }
         }, 1000);
     }
     
-    
-    function is_weixin() {
-        let ua = navigator.userAgent.toLowerCase();
-        let isWinxin = ua.indexOf('micromessenger') !== -1;
-        if (isWinxin) {
-            return true;
-        } else {
-            return false;
-        }
+    function parseUrl() {
+        const searchHref = window.location.search.replace('?', '');
+        const params = searchHref.split('&');
+        const returnParam = {};
+        params.forEach(function (param) {
+            const paramSplit = param.split('=');
+            returnParam[paramSplit[0]] = paramSplit[1];
+        });
+        return returnParam;
     }
     
-    function intentRegister(type) {
-        if (this.is_weixin()) {
-            let u = navigator.userAgent, app = navigator.appVersion;
-            let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //g
-            let isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
-            let appid = 'wx4a597f8c6a839610'
-            // console.log('nan intentRegister', isiOS)
-            if (isiOS) {
-                window.location.href = 'http://yujianzky.51nicelearn.com/onlinebuy/#/registerPhoneNineNew?type=' + type
-            } else {
-                let url = 'http://yujianzky.51nicelearn.com/onlinebuy/#/registerPhoneNineNew?type=' + type;
-                window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid='
-                    + appid + '&redirect_uri=' + encodeURIComponent(url) + '&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect';
+    let isPay = false;
+    let isPayMessage = '确认支付';
+    let price = 9;
+    let type = '1';
+    
+    function created() {
+        const params = parseUrl();
+        type = params.type;
+        if (type === 2) {
+            price = 299
+        } else {
+            price = 9
+        }
+        localStorage.setItem('price', price);
+        
+        let phone = localStorage.getItem('phone');
+        userIsPay(phone, 4).then(function (data) {
+            
+            let res = JSON.parse(data);
+            
+            isPay = res.status
+            isPayMessage = res.status ? '已支付' : '确认支付';
+            
+            let timerAliPay = window.setInterval(function () {
+                if (res && res.status) {
+                    window.clearInterval(timerAliPay)
+                    window.location.href = 'http://yujianzky.51nicelearn.com/onlinebuy/#/coder'
+                }
+            }, 2000)
+        })
+        // 倒计时
+        if (time === 600) {
+            if (!isPay) {
+            
             }
-        } else {
-            window.location.href = 'http://yujianzky.51nicelearn.com/onlinebuy/#/registerPhoneNineNew?type=' + type
+        }
+        getIP().then(function (res) {
+            if (res) {
+                const cip = res.data;
+                getAddress(cip)
+            }
+        })
+    }
+    
+    /**
+     * 获取地址信息
+     */
+    function getAddress(cip) {
+        const KEY = 'DOFBZ-AVFE2-KVAUJ-C4GP3-V4IJ2-GPFAY'; //key 秘钥自己申请
+        let url = 'https://apis.map.qq.com/ws/location/v1/ip?ip=' + cip + '&key=' + KEY;
+        $.ajax({
+            dataType: "jsonp",
+            url: url,
+            "data": {
+                callbackName: 'QQmap',
+                output: 'jsonp',
+            },
+            "success": function (userProfile) {
+                console.log('nan success', userProfile)
+                console.log(userProfile.result.ad_info.city)
+                address = userProfile.result.ad_info.city
+            },
+            "error": function (d, msg) {
+                console.log(d, msg)
+            }
+        });
+    }
+    
+    let checkPhoneMessage = '';
+    
+    
+    $('#getCode').on('click', function () {
+        if (verifyPhone()) {
+            $('#getCode').hide();
+            $('#code_time').show();
+            
+            // 验证码计时器
+            timerCode()
+            
+            
+        }
+    });
+    
+    
+    /**
+     * 根据手机号登录或者注册
+     * @date 2019/6/19
+     * @author nan
+     */
+    function loginPhonePay() {
+        if (isPay) {
+            $('#dialogPay').show()
+            return;
+        }
+        // 验证手机号是否正确
+        if (!verifyPhone) return
+        // 验证验证码是否正确
+        if (!verifyCode.call(this)) return
+        // 保存手机号
+        localStorage.setItem('phone', this.phone)
+        // 登录注册接口
+        loginPhone(this.phone, this.code, 4).then(res => {
+            // 开始支付
+            console.log('nan re', res)
+            if (res === undefined) {
+                return
+            }
+            if (res.errorCode === 1006) {
+                this.codeMessage = "验证码错误";
+                return
+            }
+            if (res.pay_type) {
+                this.isPay = true
+                this.isPayMessage = '已支付'
+                return
+            }
+            this.startAliPay();
+        })
+    }
+    
+    /**
+     * 倒计时60秒
+     *
+     * @date 2019/6/28
+     * @author nan
+     */
+        // 验证码倒计时
+    let count = '';
+    // 时间默认为null
+    let timer = null;
+    
+    function timerCode() {
+        // 定义60秒的时间
+        const TIME_COUNT = 60
+        // 当timer不为空时，显示倒计时
+        if (!timer) {
+            count = TIME_COUNT
+            timer = setInterval(() => {
+                // count从60开始--,到0时清除倒计时，隐藏倒计时，显示文本
+                if (count > 0 && count <= TIME_COUNT) {
+                    count--
+                    
+                    $('#code_time').html(count + '秒')
+                } else {
+                    clearInterval(timer)
+                    timer = null
+                }
+            }, 10)
         }
     }
+    
+    
+    function inputOnBlur() {
+        window.scroll(0, 0);
+    }
+    
+    /**
+     * 验证手机号是否正确
+     */
+    function verifyPhone() {
+        let phone = $("#phone").val();
+        $('#message_phone').html("");
+        if (phone === '') {
+            $('#message_phone').html("请输入手机号");
+            return false
+        }
+        let pattern = /^1[23456789]\d{9}$/;
+        if (pattern.test(phone) !== true) {
+            $('#message_phone').html("请输入正确的手机号");
+            return false
+        }
+        return true
+    }
+    
+    /**
+     * 验证验证码是否正确
+     *
+     * @date 2019/6/21
+     * @author nan
+     */
+    function verifyCode() {
+        let code = $('#codeMessage').val()
+        if (code === '') {
+            $('#codeMessage').html("请输入验证码");
+            $('#codeMessage').show()
+            return false
+        }
+        $('#codeMessage').hide()
+        return true
+    }
+
+
 </script>
+
+
+<style scoped lang="css">
+	@import "css/chunkd.css";
+	@import "css/pay.css";
+	@import "css/wxse.css";
+	
+	/deep/ .van-cell {
+		font-size: 0.32rem;
+		line-height: 1rem;
+	}
+	
+	/deep/ .van-cell-group {
+		padding: 0 0.5rem;
+	}
+	
+	/deep/ .van-radio__icon {
+		font-size: 0.5rem;
+	}
+	
+	/deep/ .van-cell__value {
+		position: absolute;
+		left: 0;
+		top: .2rem;
+	}
+	
+	/deep/ .van-cell__title {
+		padding-left: 0.7rem;
+	}
+</style>
 
 </html>
 

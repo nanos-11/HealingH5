@@ -14,6 +14,7 @@
 	<link rel="stylesheet" type="text/css" href="./css/gb750.css">
 	<link href="./css/style.daaf839052431001.css" rel="stylesheet">
 	<link rel="stylesheet" href="css/main.css">
+	<script src="js/home.js"></script>
 </head>
 <body>
 <div id="app">
@@ -37,7 +38,7 @@
 				</div>
 				
 				<div class="btn">
-					<div class="btns" @click="intentRegister(1)">去参团</div>
+					<div class="btns" id="togetherBuy1">去参团</div>
 				</div>
 			</div>
 		</section>
@@ -64,25 +65,25 @@
 			<div><br></div>
 		</section>
 		<section class="buybox">
-			<div class="footerbox">
+			<div class="footerbox" id="boughtCourse">
 				<div class="checkcode">
 					<div class="fon1">已购买点击查看二维码</div>
 				</div>
 			</div>
 			
-			<div class="footerbox">
-				<div class="buyleft">
+			<div class="footerbox" id="buy">
+				<div class="buyleft" id="originalBuy">
 					<div class="fon1">¥299</div>
 					<div class="fon2">单价购买</div>
 				</div>
-				<div class="buyright">
+				<div class="buyright" id="togetherBuy">
 					<div class="fon1">¥9</div>
 					<div class="fon2">一键参团</div>
 				</div>
 			</div>
 		</section>
 		
-		<section class="openBox">
+		<section class="openBox" style="display: none">
 			<div class="codeBox">
 				<div class="closeButton">
 					X
@@ -104,8 +105,32 @@
 
 <script type="text/javascript">
     
-    
     window.onload = function () {
+        created()
+    }
+    
+    let isPay = false;
+    let dialogPay = false;
+    
+    function created() {
+        let phone = localStorage.getItem('phone');
+        userIsPay(phone, 4).then(function (data) {
+            let res = JSON.parse(data);
+            isPay = res.status
+            if (isPay) {
+                dialogPay = true;
+                $('#boughtCourse').show()
+                $('#buy').hide()
+            } else {
+                $('#boughtCourse').hide()
+                $('#buy').show()
+            }
+        });
+        
+        add()
+    }
+    
+    function add() {
         let time = 1800;//30分钟换算成1800秒
         setInterval(function () {
             time = time - 1;
@@ -114,6 +139,16 @@
             $("#timer").html('还剩' + minute + '分' + second + '秒');
         }, 1000);
     }
+    
+    $('#togetherBuy1').click(function () {
+        intentRegister(1)
+    })
+    $('#originalBuy').click(function () {
+        intentRegister(2)
+    })
+    $('#togetherBuy').click(function () {
+        intentRegister(1)
+    })
     
     
     function is_weixin() {
@@ -135,13 +170,15 @@
             // console.log('nan intentRegister', isiOS)
             if (isiOS) {
                 window.location.href = 'http://yujianzky.51nicelearn.com/onlinebuy/#/registerPhoneNineNew?type=' + type
+                
             } else {
                 let url = 'http://yujianzky.51nicelearn.com/onlinebuy/#/registerPhoneNineNew?type=' + type;
                 window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid='
                     + appid + '&redirect_uri=' + encodeURIComponent(url) + '&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect';
             }
         } else {
-            window.location.href = 'http://yujianzky.51nicelearn.com/onlinebuy/#/registerPhoneNineNew?type=' + type
+            // window.location.href = 'http://yujianzky.51nicelearn.com/onlinebuy/#/registerPhoneNineNew?type=' + type
+            window.location.href = 'registerNineNew.html?type' + type
         }
     }
 </script>
