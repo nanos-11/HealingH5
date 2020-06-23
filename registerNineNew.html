@@ -10,12 +10,49 @@
 	<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
 	<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 	<script type="text/javascript" src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
+	<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 	
 	<link rel="stylesheet" type="text/css" href="./css/gb750.css">
 	<link href="./css/style.daaf839052431001.css" rel="stylesheet">
 	<link rel="stylesheet" href="css/main.css">
 	<script src="js/cover.min.js"></script>
 	<script src="js/home.js"></script>
+	
+	<script>
+        (function (r, d, s, l) {
+            if (d.documentURI.indexOf('homeDec') > -1 || d.documentURI.indexOf('nineNew') > -1) {
+                l = "1653055000213515"
+            } else {
+                l = "1645191749555203"
+            }
+            var meteor = r.meteor = r.meteor || [];
+            meteor.methods = ["track", "off", "on"];
+            meteor.factory = function (method) {
+                return function () {
+                    var args = Array.prototype.slice.call(arguments);
+                    args.unshift(method);
+                    meteor.push(args);
+                    return meteor
+                }
+            };
+            for (var i = 0; i < meteor.methods.length; i++) {
+                var key = meteor.methods[i];
+                meteor[key] = meteor.factory(key)
+            }
+            meteor.load = function () {
+                var js, fjs = d.getElementsByTagName(s)[0];
+                js = d.createElement(s);
+                js.src = "https://analytics.snssdk.com/meteor.js/v1/" + l + "/sdk";
+                fjs.parentNode.insertBefore(js, fjs)
+            };
+            meteor.load();
+            if (meteor.invoked) {
+                return
+            }
+            meteor.invoked = true;
+            meteor.track("pageview")
+        })(window, document, "script", "1653055000213515");
+	</script>
 </head>
 <body>
 <div class="pay-page">
@@ -26,9 +63,7 @@
 				<div class="rest-txt">班级剩余名额</div>
 			</div>
 			<div class="rest">
-				<div class="rest-content" id="pay_time">
-					10:00
-				</div>
+				<div class="rest-content" id="pay_time"> 10:00</div>
 				<div class="rest-txt">剩余支付时间</div>
 			</div>
 		</div>
@@ -39,19 +74,19 @@
 				<div class="tel-icon">
 					<img src="images/tel-icon.png">
 				</div>
-				<input type="tel" style="font-size: 0.34rem;" placeholder="手机号"
-				       oninput="value=value.replace(/[^\d]/g,'')" maxlength="11"
-				       id="phone">
+				<input id="phone" type="tel" style="font-size: 0.34rem;" placeholder="手机号"
+				       oninput="value=value.replace(/[^\d]/g,'')" maxlength="11">
 			</div>
+			
 			<div id="message_phone" style="font-size: 0.34rem; color: red;margin-left: 0.8rem;"></div>
 			
 			<div class="code-space">
 				<div class="input-space">
 					<div class="code-icon"><img src="images/code-icon.png"></div>
-					<input type="number" style="font-size: 0.34rem;" placeholder="验证码"
+					<input id="code" type="number" style="font-size: 0.34rem;" placeholder="验证码"
 					       oninput="value=value.replace(/[^\d]/g,'')" maxlength="6"
-					       id="code" onblur="inputOnBlur()"></div>
-				<div id="getCode" class="tiktok">获取验证码</div> <!---->
+					       onblur="inputOnBlur()"></div>
+				<div id="getCode" class="tiktok" onclick="getCode()">获取验证码</div> <!---->
 				<div id="code_time" class="tiktok" style="color:#ffffff; display: none">60</div>
 			</div>
 			<div id="codeMessage" style="font-size: 0.34rem; color: red;margin-left: 0.8rem;"></div>
@@ -62,29 +97,20 @@
 				<img src="images/hint1.png" alt="" width="100%">
 			</div>
 			<div class="course-title">支付方式</div>
-			
-			<!--   todo     -->
-			<!--<label>
-				<input type="radio" name="language" value="alipay" checked>
-				微信支付
-			<label>
-				<input type="radio" name="language" value="wechat">
-				支付宝支付
-			</label>-->
-			
-			<radio-group v-model="radio">
-				<van-cell-group>
-					<!--<van-cell title="微信" clickable @click="radio === '1'">
-					  <van-radio slot="right-icon" name="1"/>
-					  <img class='wx' src="images/wxpay.png" alt="" style="width:0.5rem;height:0.5rem">
-					</van-cell>-->
-					<van-cell title="支付宝" clickable @click="radio === '2'">
-						<van-radio slot="right-icon" name="2"/>
-						<img class='al' src="images/alipay.jpg" alt="" style="width:0.5rem;height:0.5rem">
-					</van-cell>
-				</van-cell-group>
-			</radio-group>
-			<!--        -->
+			<form>
+				<div class="input_div" style="display: none">
+					<input id="item1" type="radio" name="pay" value="1"/>
+					<label for="item1"></label>
+					<span>微信支付</span>
+					<img class='wx' src="images/wxpay.png" alt="" style="width:0.5rem;height:0.5rem">
+				</div>
+				<div class="input_div">
+					<input id="item2" type="radio" name="pay" value="2" checked/>
+					<label for="item2"></label>
+					<span>支付宝支付</span>
+					<img class='al' src="images/alipay.jpg" alt="" style="width:0.5rem;height:0.5rem">
+				</div>
+			</form>
 			<div class="line"></div>
 		</div>
 	</div>
@@ -92,25 +118,20 @@
 		<div class="pay-left">
 			<div class="money-space">
 				<div class="money-icon">￥</div>
-				<div class="money">{{price}}</div>
+				<div class="money" id="price"></div>
 			</div>
 		</div>
-		<button class="pay-right" onclick="loginPhonePay()">{{isPayMessage}}</button>
+		<button id="isPayMessage" class="pay-right" onclick="loginPhonePay()"></button>
 	</div>
-	<section class="openBox" id="dialogPay">
+	
+	<section class="openBox" id="dialogPay" style="display:none;">
 		<div class="codeBox">
 			<div class="closeButton" onclick="closeCode()">
 				X
 			</div>
-			<!--<div class="top">
-			  添加微信号或长按保存下方二维码添加您的学习专属班
-			</div>-->
 			<div style="width: 100%;height: auto;margin: 0 auto">
 				<img style="width: 80%; height: 80%;margin-left: 0.6rem" src="images/touchStu.png" alt="">
 			</div>
-			<!--<div class="bottom">
-			  微信号：13141204632
-			</div>-->
 		</div>
 	</section>
 </div>
@@ -118,25 +139,68 @@
 
 <script type="text/javascript">
     
+    /////////////////////////公共参数///////////////////////////////////////////
+    let isPay = false;
+    let isPayMessage = '确认支付';
+    let price = 9;
+    let type = '1';
+    let address = '';
+    
     window.onload = function () {
         created();
     }
-    // 支付剩余时间
-    let time = 600;
     
-    function add() {
-        let interval = setInterval(function () {
-            if (time > 0) {
-                time = time - 1;
-                const minute = parseInt(time / 60);
-                const second = parseInt(time % 60);
-                $("#pay_time").html(minute + ':' + second);
-            } else {
-                clearInterval(interval)
+    /////////////////////////页面入口函数///////////////////////////////////////////
+    function created() {
+        const params = parseUrl();
+        type = params.type;
+        
+        // todo  价格变化需要改动
+        // 例子
+        // if (type === 1) {
+        //     price = 199
+        // } else {
+        //     price = 1
+        // }
+        
+        if (type === 2) {
+            price = 299
+        } else {
+            price = 9
+        }
+        
+        localStorage.setItem('price', price);
+        $('#price').html(price)
+        
+        let phone = localStorage.getItem('phone');
+        userIsPay(phone, 5).then(function (data) {
+            let res = JSON.parse(data);
+            isPay = res.status
+            isPayMessage = res.status ? '已支付' : '确认支付';
+            $('#isPayMessage').html(isPayMessage)
+            let timerAliPay = window.setInterval(function () {
+                if (res.status) {
+                    window.clearInterval(timerAliPay)
+                    // todo  如果第三页显示支付成功页面发生变化需要改动
+                    window.location.href = 'http://yujianzky.51nicelearn.com/onlinebuy/coder'
+                }
+            }, 2000)
+        })
+        // 倒计时
+        if (time === 600) {
+            if (!isPay) {
+                add()
             }
-        }, 1000);
+        }
+        getIP().then(function (res) {
+            if (res) {
+                const cip = res.data;
+                getAddress(cip)
+            }
+        })
     }
     
+    /////////////////////////获取url地址传参///////////////////////////////////////////
     function parseUrl() {
         const searchHref = window.location.search.replace('?', '');
         const params = searchHref.split('&');
@@ -148,53 +212,36 @@
         return returnParam;
     }
     
-    let isPay = false;
-    let isPayMessage = '确认支付';
-    let price = 9;
-    let type = '1';
+    /////////////////////////倒计时///////////////////////////////////////////
+    // 支付剩余时间
+    let time = 600;
     
-    function created() {
-        const params = parseUrl();
-        type = params.type;
-        if (type === 2) {
-            price = 299
-        } else {
-            price = 9
-        }
-        localStorage.setItem('price', price);
-        
-        let phone = localStorage.getItem('phone');
-        userIsPay(phone, 4).then(function (data) {
-            
-            let res = JSON.parse(data);
-            
-            isPay = res.status
-            isPayMessage = res.status ? '已支付' : '确认支付';
-            
-            let timerAliPay = window.setInterval(function () {
-                if (res && res.status) {
-                    window.clearInterval(timerAliPay)
-                    window.location.href = 'http://yujianzky.51nicelearn.com/onlinebuy/#/coder'
+    // 倒计时函数 一般情况下不用动
+    function add() {
+        let interval = setInterval(function () {
+            if (time > 0) {
+                time = time - 1;
+                const minute = parseInt(time / 60);
+                const second = parseInt(time % 60);
+                if (second < 10) {
+                    $("#pay_time").html('0' + minute + ':0' + second);
+                } else {
+                    $("#pay_time").html('0' + minute + ':' + second);
                 }
-            }, 2000)
-        })
-        // 倒计时
-        if (time === 600) {
-            if (!isPay) {
-            
+                
+            } else {
+                clearInterval(interval)
             }
-        }
-        getIP().then(function (res) {
-            if (res) {
-                const cip = res.data;
-                getAddress(cip)
-            }
-        })
+        }, 1000);
     }
     
-    /**
-     * 获取地址信息
-     */
+    
+    /////////////////////////关闭弹窗///////////////////////////////////////////
+    function closeCode() {
+        $('#dialogPay').hide()
+    }
+    
+    /////////////////////////获取地址信息///////////////////////////////////////////
     function getAddress(cip) {
         const KEY = 'DOFBZ-AVFE2-KVAUJ-C4GP3-V4IJ2-GPFAY'; //key 秘钥自己申请
         let url = 'https://apis.map.qq.com/ws/location/v1/ip?ip=' + cip + '&key=' + KEY;
@@ -207,8 +254,12 @@
             },
             "success": function (userProfile) {
                 console.log('nan success', userProfile)
-                console.log(userProfile.result.ad_info.city)
-                address = userProfile.result.ad_info.city
+                if (userProfile.status === 121) {
+                    address = "北京"
+                } else {
+                    console.log(userProfile.result.ad_info.city)
+                    address = userProfile.result.ad_info.city
+                }
             },
             "error": function (d, msg) {
                 console.log(d, msg)
@@ -216,65 +267,250 @@
         });
     }
     
-    let checkPhoneMessage = '';
-    
-    
-    $('#getCode').on('click', function () {
-        if (verifyPhone()) {
-            $('#getCode').hide();
-            $('#code_time').show();
-            
-            // 验证码计时器
-            timerCode()
-            
-            
+    /////////////////////////点击获取验证码事件函数///////////////////////////////////////////
+    function getCode() {
+        if (!verifyPhone()) return;
+        
+        $('#getCode').hide();
+        $('#code_time').show();
+        //计时器
+        timerCode()
+        
+        // 获取手机号给螳螂
+        if (address === 'null' || address === null || address === '') {
+            address = 'null'
+            let cName = localStorage.getItem('cityname')
+            if (cName !== null && cName !== '' && cName !== undefined && address === 'null') {
+                address = cName
+            }
         }
-    });
+        let phone = $('#phone').val();
+        getPhoneDataNineNew(phone, address).then(function (data) {
+            let res = JSON.parse(data);
+            let flag = 2
+            if (res) {
+                if (res.result.flag === 1) {
+                    flag = 1
+                } else {
+                    flag = 2
+                }
+            }
+            // 获取验证码接口
+            getBindVerCode(phone, flag).then(function (data) {
+                let res = JSON.parse(data);
+                if (res.errorCode === 1005) {
+                    $('#codeMessage').html("验证码发送频繁，请稍候再试");
+                    $('#codeMessage').show()
+                }
+            })
+        })
+        meteor.track('form', {convert_id: "1660316880834572"})
+    }
     
-    
-    /**
-     * 根据手机号登录或者注册
-     * @date 2019/6/19
-     * @author nan
-     */
+    /////////////////////////根据手机号登录或者注册///////////////////////////////////////////
     function loginPhonePay() {
         if (isPay) {
             $('#dialogPay').show()
             return;
         }
         // 验证手机号是否正确
-        if (!verifyPhone) return
+        if (!verifyPhone()) return
         // 验证验证码是否正确
-        if (!verifyCode.call(this)) return
+        if (!verifyCode()) return
         // 保存手机号
-        localStorage.setItem('phone', this.phone)
+        let phone = $('#phone').val();
+        let code = $('#code').val();
+        localStorage.setItem('phone', phone)
         // 登录注册接口
-        loginPhone(this.phone, this.code, 4).then(res => {
+        loginPhone(phone, code, 5).then(function (data) {
+            $('#codeMessage').hide()
+            
+            let res = JSON.parse(data);
             // 开始支付
             console.log('nan re', res)
             if (res === undefined) {
                 return
             }
             if (res.errorCode === 1006) {
-                this.codeMessage = "验证码错误";
+                $('#codeMessage').html("验证码错误");
+                $('#codeMessage').show()
                 return
             }
             if (res.pay_type) {
-                this.isPay = true
-                this.isPayMessage = '已支付'
+                isPay = true
+                $('#isPayMessage').html('已支付')
                 return
             }
             this.startAliPay();
         })
     }
     
-    /**
-     * 倒计时60秒
-     *
-     * @date 2019/6/28
-     * @author nan
-     */
-        // 验证码倒计时
+    /////////////////////////设置支付宝支付参数///////////////////////////////////////////
+    function startAliPay() {
+        // 调起支付 true.微信 false.支付宝
+        let val = $('input[name=pay]:checked').val();
+        console.log('nan startAliPay', val)
+        if (val === '1') {
+            this.startWxPay()
+        } else {
+            this.getAliOrder()
+        }
+    }
+    
+    /////////////////////////支付宝支付///////////////////////////////////////////
+    function getAliOrder() {
+        // 绑定订单
+        let phone = $('#phone').val();
+        
+        // todo  需要改status价格对应的值
+        //  例子
+        // 'status': price === 1 ? 6 : 7,  //6=>1元 7=>199元
+        let params = {
+            'phone': phone,
+            'subject': '愈见心理课',
+            'course_id': 5,
+            'status': price === 9 ? 3 : 4,//3=>9 4=>299
+            'returnURL': 'http://yujianzky.51nicelearn.com/onlinebuy/#/coder',
+            'quitUrl': 'http://yujianzky.51nicelearn.com/onlinebuy/#/nineNew'
+        }
+        createAliPay(params).then(function (res) {
+            if (res === undefined) {
+                return
+            }
+            let timerAliPay = window.setInterval(function () {
+                if (phone === '' || phone === null || phone === undefined) {
+                    phone = localStorage.getItem('phone');
+                }
+                userIsPay(phone, 5).then(function (data) {
+                    let res = JSON.parse(data);
+                    console.log('userIsPay nan ', res)
+                    isPay = res.status
+                    isPayMessage = res.status ? '已支付' : '确认支付';
+                    $('#isPayMessage').html(isPayMessage)
+                    if (res.status) {
+                        window.clearInterval(timerAliPay)
+                        window.location.href = 'http://yujianzky.51nicelearn.com/onlinebuy/#/coder'
+                    }
+                })
+            }, 2000)
+            const div = document.createElement('div');
+            div.innerHTML = res;
+            document.body.appendChild(div);
+            document.forms[0].submit();
+        }, error => {
+            // console.log('nan 绑定订单失败', error)
+            window.alert("支付失败")
+        })
+    }
+    
+    /////////////////////////微信支付相关开始///////////////////////////////////////////
+    /////////////////////////暂时先不用管这块///////////////////////////////////////////
+    function is_weixin() {
+        let ua = navigator.userAgent.toLowerCase();
+        let isWinxin = ua.indexOf('micromessenger') !== -1;
+        if (isWinxin) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    function startWxPay() {
+        let wxCode = window.__globalCode;
+        let openId = window.__globalOpenId;
+        let appid = window.__globalAppId;
+        let local = window.location.href;
+        if (is_weixin()) {
+            // console.log('nan startWxPay code 1', this.wxCode)
+            // console.log('nan startWxPay openId 2', openId)
+            // console.log('nan startWxPay appid 3', appid)
+            // console.log('nan startWxPay local 4', local)
+            // 如果没有code 或 openId，则去请求
+            if (!wxCode && !openId) {
+                window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid='
+                    + appid + '&redirect_uri=' + encodeURIComponent(local) + '&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect';
+                // console.log('nan startWxPay-------->', openId)
+            } else {
+                // 调用接口 微信内部打开微信支付
+                this.createOrder(wxCode, 'JSAPI')
+            }
+        } else {
+            // 调用接口 浏览器打开微信支付
+            this.createOrder(wxCode, 'MWEB')
+        }
+    }
+    
+    function createOrder(code, pay_type) {
+        console.log('nan createOrder--->', code, pay_type)
+        let phone = $('#phone').val()
+        
+        // todo  需要改status价格对应的值
+        //  例子
+        // 'status': price === 1 ? 6 : 7,  //6=>1元 7=>199元
+        let params = {
+            'phone': phone,
+            'subject': '愈见心理课',
+            'course_id': 5,
+            'code': code,
+            'status': price === 9 ? 3 : 4,
+            'pay_type': pay_type
+        }
+        createWXPay(params).then(function (data) {
+            let res = JSON.parse(data);
+            if (pay_type === 'MWEB') {
+                if (res.status) {
+                    window.location.href = res.result
+                } else {
+                    isPay = !res.status
+                    isPayMessage = !res.status ? '已支付' : '确认支付';
+                    $('#isPayMessage').html(isPayMessage)
+                }
+            } else {
+                if (res.status === true) {
+                    const pay_params = res.result
+                    if (typeof WeixinJSBridge == "undefined") {
+                        if (document.addEventListener) {
+                            document.addEventListener('WeixinJSBridgeReady', vm.onBridgeReady, false);
+                        } else if (document.attachEvent) {
+                            document.attachEvent('WeixinJSBridgeReady', vm.onBridgeReady);
+                            document.attachEvent('onWeixinJSBridgeReady', vm.onBridgeReady);
+                        }
+                    } else {
+                        this.onBridgeReady(pay_params);
+                    }
+                } else {
+                    alert('微信支付调起失败!');
+                }
+            }
+        })
+    }
+    
+    function onBridgeReady(params) {
+        WeixinJSBridge.invoke(
+            'getBrandWCPayRequest', {
+                "appId": params.appId,  //公众号名称，由商户传入
+                "timeStamp": params.timeStamp.toString(),  //时间戳，自1970年以来的秒数
+                "nonceStr": params.nonceStr,  //随机串
+                "package": params.package,
+                "signType": params.signType,  //微信签名方式：
+                "paySign": params.paySign  //微信签名
+            },
+            function (res) {
+                if (res.err_msg === 'get_brand_wcpay_request:ok') {
+                    // console.log('nan ', '支付成功！');
+                    window.location.href = 'http://yujianzky.51nicelearn.com/onlinebuy/#/coder'
+                } else if (res.err_msg === 'get_brand_wcpay_request:cancel') {
+                    // console.log('nan ', '取消了支付')
+                } else {
+                    alert('支付失败')
+                }
+            });
+    }
+    
+    /////////////////////////微信支付相关结束///////////////////////////////////////////
+    
+    
+    /////////////////////////验证码倒计时///////////////////////////////////////////
     let count = '';
     // 时间默认为null
     let timer = null;
@@ -329,7 +565,8 @@
      * @author nan
      */
     function verifyCode() {
-        let code = $('#codeMessage').val()
+        let code = $('#code').val()
+        console.log('nan verifyCode', code)
         if (code === '') {
             $('#codeMessage').html("请输入验证码");
             $('#codeMessage').show()
@@ -338,8 +575,68 @@
         $('#codeMessage').hide()
         return true
     }
-
-
+    
+    
+    // 微信支付使用的 暂时不用动
+    let docCookies = {
+        getItem: function (sKey) {
+            return decodeURIComponent(document.cookie.replace(new RegExp("(?:(?:^|.*;)\\s*"
+                + encodeURIComponent(sKey).replace(/[-.+*]/g, "\\$&") + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1")) || null;
+        },
+        setItem: function (sKey, sValue, vEnd, sPath, sDomain, bSecure) {
+            if (!sKey || /^(?:expires|max\-age|path|domain|secure)$/i.test(sKey)) {
+                return false;
+            }
+            var sExpires = "";
+            if (vEnd) {
+                switch (vEnd.constructor) {
+                    case Number:
+                        sExpires = vEnd === Infinity ? "; expires=Fri, 31 Dec 9999 23:59:59 GMT" : "; max-age=" + vEnd;
+                        break;
+                    case String:
+                        sExpires = "; expires=" + vEnd;
+                        break;
+                    case Date:
+                        sExpires = "; expires=" + vEnd.toUTCString();
+                        break;
+                }
+            }
+            document.cookie = encodeURIComponent(sKey) + "=" + encodeURIComponent(sValue)
+                + sExpires + (sDomain ? "; domain=" + sDomain : "") + (sPath ? "; path=" + sPath : "") + (bSecure ? "; secure" : "");
+            return true;
+        },
+        removeItem: function (sKey, sPath, sDomain) {
+            if (!sKey || !this.hasItem(sKey)) {
+                return false;
+            }
+            document.cookie = encodeURIComponent(sKey) + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT"
+                + (sDomain ? "; domain=" + sDomain : "") + (sPath ? "; path=" + sPath : "");
+            return true;
+        },
+        hasItem: function (sKey) {
+            return (new RegExp("(?:^|;\\s*)" + encodeURIComponent(sKey).replace(/[-.+*]/g, "\\$&") + "\\s*\\=")).test(document.cookie);
+        },
+        keys: /* optional method: you can safely remove it! */ function () {
+            var aKeys = document.cookie.replace(/((?:^|\s*;)[^\=]+)(?=;|$)|^\s*|\s*(?:\=[^;]*)?(?:\1|$)/g, "").split(/\s*(?:\=[^;]*)?;\s*/);
+            for (var nIdx = 0; nIdx < aKeys.length; nIdx++) {
+                aKeys[nIdx] = decodeURIComponent(aKeys[nIdx]);
+            }
+            return aKeys;
+        }
+    };
+    let utils = {
+        getUrlQuery: function (name) {
+            var result = location.search.match(new RegExp("[\?\&]" + name + "=([^\&]+)", "i"));
+            if (result == null || result.length < 1) {
+                return "";
+            }
+            return result[1];
+        }
+    };
+    window.__globalCode = utils.getUrlQuery('code')
+    window.__globalOpenId = docCookies.getItem('opendId')
+    //wx0b2a2de1d89dbc61  wxfd55afcce06c6405
+    window.__globalAppId = 'wx4a597f8c6a839610'
 </script>
 
 
@@ -347,6 +644,47 @@
 	@import "css/chunkd.css";
 	@import "css/pay.css";
 	@import "css/wxse.css";
+	
+	.input_div {
+		position: relative;
+		line-height: 30px;
+	}
+	
+	input[type='radio'] {
+		width: 20px;
+		height: 20px;
+		opacity: 0;
+	}
+	
+	label {
+		position: absolute;
+		left: 5px;
+		top: 3px;
+		width: 20px;
+		height: 20px;
+		border-radius: 50%;
+		border: 1px solid #999;
+	}
+	
+	/*设置选中的input的样式*/
+	/* + 是兄弟选择器,获取选中后的label元素*/
+	input:checked + label {
+		background-color: #3c86f1;
+		border: 1px solid #3c86f1;
+	}
+	
+	input:checked + label::after {
+		position: absolute;
+		content: '';
+		width: 5px;
+		height: 10px;
+		top: 3px;
+		left: 6px;
+		border: 2px solid #fff;
+		border-top: none;
+		border-left: none;
+		transform: rotate(45deg);
+	}
 	
 	/deep/ .van-cell {
 		font-size: 0.32rem;

@@ -17,6 +17,16 @@
 	<script src="js/home.js"></script>
 </head>
 <body>
+
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
+<script type="text/javascript">
+    const Ip = returnCitySN['cip'];
+    const cityname = returnCitySN['cname'];
+    localStorage.setItem('Ip', Ip)
+    localStorage.setItem('cityname', cityname)
+</script>
+
 <div id="app">
 	<div>
 		<section class="page1">
@@ -178,7 +188,7 @@
             }
         } else {
             // window.location.href = 'http://yujianzky.51nicelearn.com/onlinebuy/#/registerPhoneNineNew?type=' + type
-            window.location.href = 'registerNineNew.html?type' + type
+            window.location.href = 'registerNineNew.html?type=' + type
         }
     }
 </script>
