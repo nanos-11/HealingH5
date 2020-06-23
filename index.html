@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-	
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"/>
 	<title>愈见心理</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 	
@@ -17,9 +16,6 @@
 	<script src="js/home.js"></script>
 </head>
 <body>
-
-<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
-<script src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
 <script type="text/javascript">
     const Ip = returnCitySN['cip'];
     const cityname = returnCitySN['cname'];
@@ -48,7 +44,7 @@
 				</div>
 				
 				<div class="btn">
-					<div class="btns" id="togetherBuy1">去参团</div>
+					<div class="btns" onclick="intentRegister(1)">去参团</div>
 				</div>
 			</div>
 		</section>
@@ -82,11 +78,11 @@
 			</div>
 			
 			<div class="footerbox" id="buy">
-				<div class="buyleft" id="originalBuy">
+				<div class="buyleft" onclick="intentRegister(2)">
 					<div class="fon1">¥299</div>
 					<div class="fon2">单价购买</div>
 				</div>
-				<div class="buyright" id="togetherBuy">
+				<div class="buyright" onclick="intentRegister(1)">
 					<div class="fon1">¥9</div>
 					<div class="fon2">一键参团</div>
 				</div>
@@ -149,17 +145,6 @@
             $("#timer").html('还剩' + minute + '分' + second + '秒');
         }, 1000);
     }
-    
-    $('#togetherBuy1').click(function () {
-        intentRegister(1)
-    })
-    $('#originalBuy').click(function () {
-        intentRegister(2)
-    })
-    $('#togetherBuy').click(function () {
-        intentRegister(1)
-    })
-    
     
     function is_weixin() {
         let ua = navigator.userAgent.toLowerCase();
